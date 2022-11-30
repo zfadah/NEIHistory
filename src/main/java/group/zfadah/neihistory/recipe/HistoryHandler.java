@@ -8,11 +8,10 @@ import codechicken.nei.recipe.*;
 import group.zfadah.neihistory.HistoryInstance;
 import group.zfadah.neihistory.Logger;
 import group.zfadah.neihistory.history.HistoryPanel;
+import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-
-import java.util.List;
 
 public class HistoryHandler implements ICraftingHandler, IUsageHandler, IContainerInputHandler {
 
@@ -169,5 +168,4 @@ public class HistoryHandler implements ICraftingHandler, IUsageHandler, IContain
 
     @Override
     public void onMouseDragged(GuiContainer gui, int mousex, int mousey, int button, long heldTime) {}
-
 }

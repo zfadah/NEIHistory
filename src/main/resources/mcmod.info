@@ -6,7 +6,7 @@
 		"description": "NotEnoughItem History Panel Plugin",
 		"version": "${modVersion}",
 		"mcversion": "${minecraftVersion}",
-		"url": " ",
+		"url": "https://github.com/zfadah/NEIHistory",
 		"updateUrl": "",
 		"authorList": ["zfadah"],
 		"credits": "",

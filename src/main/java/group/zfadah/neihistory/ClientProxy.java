@@ -6,13 +6,9 @@ import cpw.mods.fml.common.event.*;
 
 public class ClientProxy {
 
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) {}
 
-    }
-
-    public void init(FMLInitializationEvent event) {
-
-    }
+    public void init(FMLInitializationEvent event) {}
 
     public void postInit(FMLPostInitializationEvent event) {
         API.registerUsageHandler(HistoryInstance.historyHandler);
