@@ -12,5 +12,4 @@ jobs:
     uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/build-and-test.yml@master
     secrets: inherit
     with:
-      inputs:
-        client-only:true
+        client-only: true
