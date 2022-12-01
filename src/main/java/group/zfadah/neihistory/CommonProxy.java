@@ -1,5 +1,6 @@
 package group.zfadah.neihistory;
 
+import codechicken.nei.api.API;
 import cpw.mods.fml.common.event.*;
 
 public class CommonProxy {
@@ -7,7 +8,10 @@ public class CommonProxy {
 
     public void init(FMLInitializationEvent event) {}
 
-    public void postInit(FMLPostInitializationEvent event) {}
+    public void postInit(FMLPostInitializationEvent event) {
+        API.registerUsageHandler(HistoryInstance.historyHandler);
+        API.registerRecipeHandler(HistoryInstance.historyHandler);
+    }
 
     public void serverAboutToStart(FMLServerAboutToStartEvent event) {}
 

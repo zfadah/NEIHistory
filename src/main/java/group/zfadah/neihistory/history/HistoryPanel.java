@@ -1,97 +1,38 @@
 package group.zfadah.neihistory.history;
 
-import codechicken.lib.gui.GuiDraw;
 import codechicken.lib.vec.Rectangle4i;
-import codechicken.nei.*;
+import codechicken.nei.ItemPanel;
+import codechicken.nei.ItemPanels;
 import codechicken.nei.ItemsGrid;
+import codechicken.nei.NEIClientConfig;
 import codechicken.nei.config.ConfigSet;
-import codechicken.nei.guihook.GuiContainerManager;
 import group.zfadah.neihistory.HistoryInstance;
 import java.util.ArrayList;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 
-public class HistoryPanel extends PanelWidget {
+public class HistoryPanel extends ItemPanel {
 
     public static ConfigSet world;
 
     private int size;
 
-    public ArrayList<ItemStack> realItems = new ArrayList<>();
-
-    protected static class HistoryPanelGrid extends ItemsGrid {
-        public ArrayList<ItemStack> newItems;
-
-        public void setItems(ArrayList<ItemStack> items) {
-            if (realItems != items) {
-                realItems = items;
-                onGridChanged();
-            }
-        }
-
-        @Override
-        public int getNumPages() {
-            return 1;
-        }
-
-        protected void clear() {
-            realItems.clear();
+    protected static class HistoryPanelGrid extends ItemPanelGrid {
+        public HistoryPanelGrid() {
+            newItems = new ArrayList<>();
         }
     }
 
     public HistoryPanel() {
         grid = new HistoryPanelGrid();
-        ((HistoryPanelGrid) grid).newItems = new ArrayList<>();
     }
 
     @Override
-    public void resize(GuiContainer gui) {
-        final Rectangle4i margin =
-                new Rectangle4i(getMarginLeft(gui), getMarginTop(gui), getWidth(gui), getHeight(gui));
-        x = margin.x;
-        y = margin.y;
-        w = margin.w;
-        h = margin.h;
-        size = w / ItemsGrid.SLOT_SIZE * h / ItemsGrid.SLOT_SIZE;
-        if (world != NEIClientConfig.world) {
-            world = NEIClientConfig.world;
-            ((HistoryPanelGrid) (HistoryInstance.historyPanel.getGrid())).clear();
-            //            ((HistoryPanelGrid) ItemPanels.historyPanel.getGrid()).clear();
-        }
-
-        grid.setGridSize(x, y, w, h);
-        grid.refresh(gui);
+    public void init() {
+        more = null;
+        less = null;
+        quantity = null;
     }
-
-    @Override
-    public void draw(int mousex, int mousey) {
-        GuiContainer gui = NEIClientUtils.getGuiContainer();
-        GuiContainerManager.enableMatrixStackLogging();
-        GuiDraw.drawRect(
-                HistoryInstance.historyPanel.getMarginLeft(gui),
-                HistoryInstance.historyPanel.getMarginTop(gui),
-                HistoryInstance.historyPanel.getWidth(gui),
-                HistoryInstance.historyPanel.getHeight(gui),
-                1157627903);
-        GuiContainerManager.disableMatrixStackLogging();
-        super.draw(mousex, mousey);
-    }
-
-    @Override
-    public void setVisible() {}
-
-    @Override
-    public String getLabelText() {
-        return String.format("(%d/%d)", getPage(), Math.max(1, getNumPages()));
-    }
-
-    @Override
-    protected String getPositioningSettingName() {
-        return "world.panels.history";
-    }
-
-    @Override
-    public void init() {}
 
     @Override
     public int getMarginLeft(GuiContainer gui) { // X
@@ -114,53 +55,57 @@ public class HistoryPanel extends PanelWidget {
     }
 
     @Override
-    protected int resizeFooter(GuiContainer gui) {
-        return 0;
-    }
-
-    @Override
     protected int resizeHeader(GuiContainer gui) {
         return 0;
     }
 
     @Override
-    protected ItemStack getDraggedStackWithQuantity(int mouseDownSlot) {
-        ItemStack item = grid.getItem(mouseDownSlot);
+    protected int resizeFooter(GuiContainer gui) {
+        return 0;
+    }
 
-        if (item != null) {
-            int amount = NEIClientConfig.getItemQuantity();
-
-            if (amount == 0) {
-                amount = item.getMaxStackSize();
-            }
-
-            return NEIServerUtils.copyStack(item, amount);
+    @Override
+    public void resize(GuiContainer gui) {
+        final Rectangle4i margin =
+                new Rectangle4i(getMarginLeft(gui), getMarginTop(gui), getWidth(gui), getHeight(gui));
+        x = margin.x;
+        y = margin.y;
+        w = margin.w;
+        h = margin.h;
+        size = w / ItemsGrid.SLOT_SIZE * h / ItemsGrid.SLOT_SIZE;
+        if (world != NEIClientConfig.world) {
+            world = NEIClientConfig.world;
+            ((HistoryPanelGrid) (HistoryInstance.historyPanel.getGrid())).newItems.clear();
         }
-
-        return null;
+        grid.setGridSize(x, y, w, h);
+        grid.refresh(gui);
     }
 
-    public ItemStack getStack(int mouseDownSlot) {
-        return getDraggedStackWithQuantity(mouseDownSlot);
+    @Override
+    public void setVisible() {
+        super.setVisible();
     }
 
-    public void addHistorys(ItemStack stack) {
-        ArrayList<ItemStack> items = grid.getItems();
-
-        if (items.size() > 0) {
-            for (int i = 0; i < items.size(); i++) {
-                if (items.get(i).getDisplayName().equals(stack.getDisplayName())) {
-                    items.remove(i);
+    public void addHistory(ItemStack item) {
+        ArrayList<ItemStack> items1 = grid.getItems();
+        if (items1.size() > 0) {
+            for (int i = 0; i < items1.size(); i++) {
+                if (items1.get(i).getDisplayName().equals(item.getDisplayName())) {
+                    items1.remove(i);
                     break;
                 }
             }
         }
-
-        if (items.size() == size) {
-            items.remove(size - 1);
+        if (items1.size() == size) {
+            items1.remove(size - 1);
         }
-        stack.stackSize = 1;
-        items.add(0, stack.copy());
-        ((HistoryPanelGrid) (HistoryInstance.historyPanel.getGrid())).setItems(items);
+        item.stackSize = 1;
+        items1.add(0, item.copy());
+        ((HistoryPanelGrid) (HistoryInstance.historyPanel.getGrid())).setItems(items1);
+    }
+
+    @Override
+    protected String getPositioningSettingName() {
+        return null;
     }
 }

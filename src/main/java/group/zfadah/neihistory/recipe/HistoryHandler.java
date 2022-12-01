@@ -106,7 +106,7 @@ public class HistoryHandler implements ICraftingHandler, IUsageHandler, IContain
             try {
                 ItemStack res = ((ItemStack) obj[0]);
                 res.stackSize = 1;
-                HistoryInstance.historyPanel.addHistorys(res.copy());
+                HistoryInstance.historyPanel.addHistory(res.copy());
             } catch (ClassCastException e) {
                 Logger.warn(e.toString());
             }
@@ -145,16 +145,14 @@ public class HistoryHandler implements ICraftingHandler, IUsageHandler, IContain
         ItemPanel.ItemPanelSlot slotMouseOver = his.getGrid().getSlotMouseOver(mousex, mousey);
         if (slotMouseOver != null && slotMouseOver.slotIndex == his.mouseDownSlot && his.draggedStack == null) {
             ItemStack item = slotMouseOver.item;
-            if (NEIController.manager.window instanceof GuiRecipe || !NEIClientConfig.canCheatItem(item)) {
+            if (NEIController.manager.window instanceof GuiRecipe) {
                 if (button == 0) {
                     GuiCraftingRecipe.openRecipeGui("item", item);
                 } else if (button == 1) {
                     GuiUsageRecipe.openRecipeGui("item", item);
                 }
                 his.mouseDownSlot = -1;
-                return;
             }
-            NEIClientUtils.cheatItem(his.getStack(slotMouseOver.slotIndex), button, -1);
         }
     }
 
