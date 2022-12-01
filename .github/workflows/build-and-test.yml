@@ -13,4 +13,4 @@ jobs:
     secrets: inherit
     with:
       inputs:
-        client-only
+        client-only:true
