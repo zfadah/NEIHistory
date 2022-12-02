@@ -3,17 +3,15 @@ package group.zfadah.neihistory.recipe;
 import codechicken.nei.*;
 import codechicken.nei.api.IOverlayHandler;
 import codechicken.nei.api.IRecipeOverlayRenderer;
-import codechicken.nei.guihook.IContainerInputHandler;
 import codechicken.nei.recipe.*;
 import group.zfadah.neihistory.HistoryInstance;
 import group.zfadah.neihistory.Logger;
-import group.zfadah.neihistory.history.HistoryPanel;
 import java.util.List;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 
-public class HistoryHandler implements ICraftingHandler, IUsageHandler, IContainerInputHandler {
+public class HistoryHandler implements ICraftingHandler, IUsageHandler {
 
     @Override
     public ICraftingHandler getRecipeHandler(String outputId, Object... results) {
@@ -112,58 +110,4 @@ public class HistoryHandler implements ICraftingHandler, IUsageHandler, IContain
             }
         }
     }
-
-    /*
-    Implment of IContainerInputHandler
-     */
-
-    @Override
-    public boolean keyTyped(GuiContainer gui, char keyChar, int keyCode) {
-        return false;
-    }
-
-    @Override
-    public void onKeyTyped(GuiContainer gui, char keyChar, int keyID) {}
-
-    @Override
-    public boolean lastKeyTyped(GuiContainer gui, char keyChar, int keyID) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseClicked(GuiContainer gui, int mousex, int mousey, int button) {
-        return false;
-    }
-
-    @Override
-    public void onMouseClicked(GuiContainer gui, int mousex, int mousey, int button) {}
-
-    @Override
-    public void onMouseUp(GuiContainer gui, int mousex, int mousey, int button) {
-        HistoryPanel his = HistoryInstance.historyPanel;
-
-        ItemPanel.ItemPanelSlot slotMouseOver = his.getGrid().getSlotMouseOver(mousex, mousey);
-        if (slotMouseOver != null && slotMouseOver.slotIndex == his.mouseDownSlot && his.draggedStack == null) {
-            ItemStack item = slotMouseOver.item;
-            if (NEIController.manager.window instanceof GuiRecipe) {
-                if (button == 0) {
-                    GuiCraftingRecipe.openRecipeGui("item", item);
-                } else if (button == 1) {
-                    GuiUsageRecipe.openRecipeGui("item", item);
-                }
-                his.mouseDownSlot = -1;
-            }
-        }
-    }
-
-    @Override
-    public boolean mouseScrolled(GuiContainer gui, int mousex, int mousey, int scrolled) {
-        return false;
-    }
-
-    @Override
-    public void onMouseScrolled(GuiContainer gui, int mousex, int mousey, int scrolled) {}
-
-    @Override
-    public void onMouseDragged(GuiContainer gui, int mousex, int mousey, int button, long heldTime) {}
 }

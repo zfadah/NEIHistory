@@ -75,7 +75,8 @@ public class HistoryPanel extends ItemPanel {
         size = w / ItemsGrid.SLOT_SIZE * h / ItemsGrid.SLOT_SIZE;
         if (world != NEIClientConfig.world) {
             world = NEIClientConfig.world;
-            ((HistoryPanelGrid) (HistoryInstance.historyPanel.getGrid())).newItems.clear();
+            if (((HistoryPanelGrid) (HistoryInstance.historyPanel.getGrid())).newItems != null)
+                ((HistoryPanelGrid) (HistoryInstance.historyPanel.getGrid())).newItems.clear();
         }
         grid.setGridSize(x, y, w, h);
         grid.refresh(gui);

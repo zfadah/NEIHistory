@@ -1,6 +1,5 @@
 package group.zfadah.neihistory;
 
-import codechicken.nei.guihook.GuiContainerManager;
 import cpw.mods.fml.common.event.*;
 
 public class ClientProxy extends CommonProxy {
@@ -13,7 +12,6 @@ public class ClientProxy extends CommonProxy {
     }
 
     public void postInit(FMLPostInitializationEvent event) {
-        GuiContainerManager.addInputHandler(HistoryInstance.historyHandler);
         super.postInit(event);
     }
 
