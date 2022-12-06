@@ -1,10 +1,6 @@
 package group.zfadah.neihistory.core.transformer;
 
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
-
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ListIterator;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -30,32 +26,42 @@ public class LayoutManagerTransformer implements IClassTransformer {
             if ("updateWidgetVisiblities".equals(method.name)
                     && "(Lnet/minecraft/client/gui/inventory/GuiContainer;Lcodechicken/nei/VisiblityData;)V"
                             .equals(method.desc)) {
-                InsnList insert = new InsnList();
-                insert.add(new FieldInsnNode(
-                        Opcodes.GETSTATIC,
-                        "group/zfadah/neihistory/HistoryInstance",
-                        "historyPanel",
-                        "Lgroup/zfadah/neihistory/history/HistoryPanel;"));
-                insert.add(new MethodInsnNode(
-                        Opcodes.INVOKESTATIC,
-                        "codechicken/nei/LayoutManager",
-                        "addWidget",
-                        "(Lcodechicken/nei/Widget;)V",
-                        false));
-                method.instructions.insert(method.instructions.get(94), insert);
+                AbstractInsnNode cur;
+                AbstractInsnNode tar = null;
+                ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                while (iterator.hasNext()) {
+                    cur = iterator.next();
+                    if (cur.getOpcode() == Opcodes.INVOKEVIRTUAL) {
+                        if (cur instanceof MethodInsnNode) {
+                            MethodInsnNode cur1 = (MethodInsnNode) cur;
+                            if ("codechicken/nei/ItemPanel".equals(cur1.owner)
+                                    && "setVisible".equals(cur1.name)
+                                    && "()V".equals(cur1.desc)) {
+                                tar = cur;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (tar != null) {
+                    InsnList insert = new InsnList();
+                    insert.add(new FieldInsnNode(
+                            Opcodes.GETSTATIC,
+                            "group/zfadah/neihistory/HistoryInstance",
+                            "historyPanel",
+                            "Lgroup/zfadah/neihistory/history/HistoryPanel;"));
+                    insert.add(new MethodInsnNode(
+                            Opcodes.INVOKESTATIC,
+                            "codechicken/nei/LayoutManager",
+                            "addWidget",
+                            "(Lcodechicken/nei/Widget;)V",
+                            false));
+                    method.instructions.insert(tar.getNext(), insert);
+                }
             }
         }
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(writer);
-        byte[] bytes1 = writer.toByteArray();
-        try {
-            OutputStream os = Files.newOutputStream(Paths.get("D://LayoutManager.class"), CREATE_NEW);
-            os.write(bytes1);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bytes1;
+        return writer.toByteArray();
     }
 }
