@@ -29,7 +29,6 @@ public class ItemPanelTransformer implements IClassTransformer {
                 AbstractInsnNode currentNode;
                 AbstractInsnNode targetNode = null;
 
-                @SuppressWarnings("unchecked")
                 ListIterator<AbstractInsnNode> iterator1 = m.instructions.iterator();
                 while (iterator1.hasNext()) {
                     currentNode = iterator1.next();

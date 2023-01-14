@@ -12,12 +12,12 @@ public class LayoutStyleTransformer implements IClassTransformer {
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
 
         if (transformedName.contains("codechicken.nei.LayoutStyleMinecraft")) {
-            return patchLayoutASM(transformedName, basicClass);
+            return patchLayoutASM(basicClass);
         }
         return basicClass;
     }
 
-    public byte[] patchLayoutASM(String name, byte[] bytes) {
+    public byte[] patchLayoutASM(byte[] bytes) {
         ClassNode classNode = new ClassNode();
         ClassReader cr = new ClassReader(bytes);
         cr.accept(classNode, 0);

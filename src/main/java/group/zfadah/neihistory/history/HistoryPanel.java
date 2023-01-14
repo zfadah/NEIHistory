@@ -1,10 +1,7 @@
 package group.zfadah.neihistory.history;
 
 import codechicken.lib.vec.Rectangle4i;
-import codechicken.nei.ItemPanel;
-import codechicken.nei.ItemPanels;
-import codechicken.nei.ItemsGrid;
-import codechicken.nei.NEIClientConfig;
+import codechicken.nei.*;
 import codechicken.nei.config.ConfigSet;
 import group.zfadah.neihistory.HistoryInstance;
 import java.util.ArrayList;
@@ -108,5 +105,38 @@ public class HistoryPanel extends ItemPanel {
     @Override
     protected String getPositioningSettingName() {
         return null;
+    }
+
+    @Override
+    public boolean handleClickExt(int mouseX, int mouseY, int button) {
+        if (HistoryInstance.historyPanel.draggedStack != null) {
+            return HistoryInstance.historyPanel.handleDraggedClick(mouseX, mouseY, button);
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean handleDraggedClick(int mouseX, int mouseY, int button) {
+        if (draggedStack == null) {
+            return false;
+        }
+        if (handleGUIContainerClick(draggedStack, mouseX, mouseY, button)) {
+
+            if (draggedStack.stackSize == 0) {
+                draggedStack = null;
+            }
+
+            return true;
+        }
+
+        final GuiContainer gui = NEIClientUtils.getGuiContainer();
+        if (mouseX < gui.guiLeft
+                || mouseY < gui.guiTop
+                || mouseX >= gui.guiLeft + gui.xSize
+                || mouseY >= gui.guiTop + gui.ySize) {
+            draggedStack = null;
+        }
+
+        return true;
     }
 }

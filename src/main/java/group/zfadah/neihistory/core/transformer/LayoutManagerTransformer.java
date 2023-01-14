@@ -12,12 +12,12 @@ public class LayoutManagerTransformer implements IClassTransformer {
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
 
         if (transformedName.contains("codechicken.nei.LayoutManager")) {
-            return patchUpdateWidgetASM(transformedName, basicClass);
+            return patchUpdateWidgetASM(basicClass);
         }
         return basicClass;
     }
 
-    private byte[] patchUpdateWidgetASM(String name, byte[] bytes) {
+    private byte[] patchUpdateWidgetASM(byte[] bytes) {
         ClassNode classNode = new ClassNode();
         ClassReader cr = new ClassReader(bytes);
         cr.accept(classNode, 0);
